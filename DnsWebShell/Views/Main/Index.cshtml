@@ -1,0 +1,42 @@
+﻿@model IList<DnsWebShell.Models.ComString>
+
+@{
+	Layout = "_Layout";
+}
+
+<div class="container">
+
+	<h1>Коммандная строка</h1>
+
+	<div id="form form-floating" class="p-2">
+		<textarea class="form-control" placeholder="Введите команду" id="requestString" style="height: 35px"></textarea>
+		<button type="submit" id="submit" class="button-submit btn btn-dark">Submit</button>
+	</div>
+
+
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<div class="output-container">
+					<div class="p-3 border bg-light" id="output-field">
+
+					</div>
+				</div>
+			</div>
+			<div class="col">
+				<div class="p-3 border bg-light" id="request-list">
+
+					@for (int i = 0; i < Model.Count; i++)
+					{
+						<div class="request-item" id="@i">
+							@Model[i].Body
+						</div>
+					}
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script src="~/lib/js/mainPage.js"></script>

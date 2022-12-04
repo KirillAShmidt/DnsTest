@@ -1,0 +1,15 @@
+﻿#output-field {
+    white-space: pre-wrap;
+}
+
+h1 {
+    padding: 9px;
+}
+
+.button-submit {
+    margin-top: 10px;
+}
+
+.border{
+    border-radius: 3px;
+}
