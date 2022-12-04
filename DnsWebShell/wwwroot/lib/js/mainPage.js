@@ -57,7 +57,7 @@ function ShowRequestRange()
 		$(`div#${item.id}`).hide();
 	}
 
-	for (let i = counter; i < counter + 5; i++) {
+	for (let i = counter; i < counter + amountOfRequests; i++) {
 		$(`div#${requestList[i].id}`).show();
 	}
 }
@@ -69,6 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 let requestList;
 let counter = 0;
+const amountOfRequests = 5;
 
 const form =
 {
@@ -89,7 +90,7 @@ document.addEventListener('keydown', (event) => {
 
 document.addEventListener('keydown', (event) => {
 
-	if (event.keyCode == '40' && counter + 5 < requestList.length) {
+	if (event.keyCode == '40' && counter + amountOfRequests < requestList.length) {
 		counter++;
 		ShowRequestRange();
 	}
