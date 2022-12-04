@@ -35,7 +35,7 @@ public class MainController : Controller
 
 		await _dbContext.SaveChangesAsync();
 
-		return _cmd.Output + _cmd.Error;
+		return (_cmd.Output + _cmd.Error).RemoveTrash();
 	}
 
 	[HttpPost]
