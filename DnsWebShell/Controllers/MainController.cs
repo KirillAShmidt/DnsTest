@@ -1,5 +1,6 @@
 ﻿using DnsWebShell.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace DnsWebShell.Controllers;
 
@@ -24,32 +25,40 @@ public class MainController : Controller
 	{
 		await _cmd.ExecuteCommand(requestString);
 
-		var requestAddress = HttpContext.Connection.RemoteIpAddress!.ToString();
+		try {
+			var requestAddress = HttpContext.Connection.RemoteIpAddress!.ToString();
 
-		_dbContext.ComStrings.Add(new ComString
+			_dbContext.ComStrings.Add(new ComString
+			{
+				Body = requestString,
+				Date = DateTime.Now,
+				ConnectionName = requestAddress
+			});
+
+			await _dbContext.SaveChangesAsync();
+		}
+		catch (Exception e)
 		{
-			Body = requestString,
-			Date = DateTime.Now,
-			ConnectionName = requestAddress
-		});
-
-		await _dbContext.SaveChangesAsync();
-
+			Console.WriteLine(e);
+		}
 	}
 
 	private List<ComString> GetWithUserIps()
 	{
 		var requestAddress = HttpContext.Connection.RemoteIpAddress!.ToString();
 
-		if (_dbContext.Database.CanConnect())
-		{
+		try {
 			return _dbContext.ComStrings
 					.Where(x => x.ConnectionName == requestAddress)
 					.OrderByDescending(x => x.Date)
 					.ToList();
 		}
-		else
-			return new List<ComString>();
+		catch (Exception e)
+		{
+			Console.WriteLine(e);
+		}
+
+		return new List<ComString>();
 	}
 
 	public string RecieveOutput()

@@ -1,7 +1,5 @@
-﻿async function elementUpdate(selector)
-{
-	try
-	{
+﻿async function elementUpdate(selector){
+	try{
 		var html = await (await fetch(location.href)).text();
 		var newdoc = new DOMParser().parseFromString(html, 'text/html');
 
@@ -11,35 +9,29 @@
 
 		return true;
 	}
-	catch (err)
-	{
-		console.log("Error");
+	catch (err){
+		console.log('Error');
 		return false;
 	}
 }
 
-function SendRequest()
-{
+function SendRequest(){
 	const request = new XMLHttpRequest();
 
 	request.onload = () => {
 		document.getElementById('output-field').innerHTML = request.responseText;
-
 		elementUpdate('div#request-list');
-
 		ShowRequestRange();
-
-		console.log(requestList.length);
 	}
 
 	const requestData = `requestString=${form.requestString.value}`;
 
-	if (form.requestString.value == "") {
+	if (form.requestString.value == '') {
 		return;
 	}
 
 	let input = form.requestString;
-	input.value = "";
+	input.value = '';
 	input.focus;
 	input.select();
 
@@ -54,16 +46,13 @@ function GetOutput() {
 
 	request.onload = () => {
 		document.getElementById('output-field').innerHTML = request.responseText;
-		//elementUpdate("div#output-field");
-		console.log(request.responseText)
 	}
 
 	request.open('get', 'RecieveOutput');
 	request.send();
 }
 
-function ShowRequestRange()
-{
+function ShowRequestRange(){
 	requestList = document.getElementById('request-list').children;
 
 	for (const item of requestList) {
@@ -75,24 +64,18 @@ function ShowRequestRange()
 	}
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-	ShowRequestRange();
-});
-
+document.addEventListener('DOMContentLoaded', () => ShowRequestRange());
 
 let requestList;
 let counter = 0;
 const amountOfRequests = 5;
 
-const form =
-{
+const form = {
 	requestString: document.getElementById('requestString'),
 	submit: document.getElementById('submit')
 }
 
-form.submit.addEventListener('click', () => {
-	SendRequest();
-});
+form.submit.addEventListener('click', () => SendRequest());
 
 document.addEventListener('keydown', (event) => {
 	if (event.key == 'Enter') {
@@ -102,7 +85,6 @@ document.addEventListener('keydown', (event) => {
 });
 
 document.addEventListener('keydown', (event) => {
-
 	if (event.keyCode == '40' && counter + amountOfRequests < requestList.length) {
 		counter++;
 		ShowRequestRange();
@@ -113,6 +95,6 @@ document.addEventListener('keydown', (event) => {
 	}
 
 	preventDefault();
-})
+});
 
 setInterval(GetOutput, 250);
