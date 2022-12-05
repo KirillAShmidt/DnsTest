@@ -11,31 +11,43 @@ public class CmdProcess
 	private string? _error;
 
 	private ProcessStartInfo _processInfo = new ProcessStartInfo();
+	private Process _process = new Process();
 
-	public CmdProcess()
+	public async Task ExecuteCommand(string command)
 	{
+		_process.Dispose();
+		SetNewProcess();
+
+		await _process.StandardInput.WriteLineAsync(command);
+	}
+
+	private void SetNewProcess()
+	{
+		_output = "";
+		_error = "";
+
 		_processInfo.FileName = "cmd.exe";
-		//_processInfo.WorkingDirectory = "C://";
 		_processInfo.UseShellExecute = false;
 		_processInfo.RedirectStandardInput = true;
 		_processInfo.RedirectStandardOutput = true;
 		_processInfo.RedirectStandardError = true;
-	}
 
-	public async Task ExecuteCommand(string command)
-	{
-		var process = new Process();
+		_process = new Process();
 
-		process.StartInfo = _processInfo;
-		process.Start();
+		_process.OutputDataReceived += new DataReceivedEventHandler((object sender, DataReceivedEventArgs e) =>
+		{
+			_output += e.Data + "\n";
+		});
 
-		await process.StandardInput.WriteLineAsync(command);
-		process.StandardInput.Close();
+		_process.ErrorDataReceived += new DataReceivedEventHandler((object sender, DataReceivedEventArgs e) =>
+		{
+			_output += e.Data + "\n";
+		});
 
-		_output = await process.StandardOutput.ReadToEndAsync();
-		_error = await process.StandardError.ReadToEndAsync();
+		_process.StartInfo = _processInfo;
+		_process.Start();
+		_process.BeginOutputReadLine();
+		_process.BeginErrorReadLine();
 
-		process.WaitForExit();
-		process.Close();
 	}
 }

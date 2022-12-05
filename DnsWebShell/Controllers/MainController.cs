@@ -20,7 +20,7 @@ public class MainController : Controller
 	}
 
 	[HttpPost]
-	public async Task<string?> PutInCommand(string requestString)
+	public async Task PutInCommand(string requestString)
 	{
 		await _cmd.ExecuteCommand(requestString);
 
@@ -35,17 +35,25 @@ public class MainController : Controller
 
 		await _dbContext.SaveChangesAsync();
 
-		return (_cmd.Output + _cmd.Error).RemoveTrash();
 	}
 
-	[HttpPost]
 	private List<ComString> GetWithUserIps()
 	{
-		var requestAddress = HttpContext.Connection.RemoteIpAddress!.ToString(); 
+		var requestAddress = HttpContext.Connection.RemoteIpAddress!.ToString();
 
-		return _dbContext.ComStrings
-				.Where(x => x.ConnectionName == requestAddress)
-				.OrderByDescending(x => x.Date)
-				.ToList();
+		if (_dbContext.Database.CanConnect())
+		{
+			return _dbContext.ComStrings
+					.Where(x => x.ConnectionName == requestAddress)
+					.OrderByDescending(x => x.Date)
+					.ToList();
+		}
+		else
+			return new List<ComString>();
+	}
+
+	public string RecieveOutput()
+	{
+		return (_cmd.Output + _cmd.Error).RemoveTrash();
 	}
 }

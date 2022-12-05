@@ -7,7 +7,15 @@ var cmd = new CmdProcess();
 var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
+builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection, 
+	sqlServerOptionsAction: sqlOptions =>
+	{
+		sqlOptions.EnableRetryOnFailure(
+			maxRetryCount: 5,
+			maxRetryDelay: TimeSpan.FromSeconds(30),
+			errorNumbersToAdd: null);
+	}
+	));
 builder.Services.AddSingleton(cmd);
 
 var app = builder.Build();

@@ -49,6 +49,19 @@ function SendRequest()
 	request.send(requestData);
 }
 
+function GetOutput() {
+	const request = new XMLHttpRequest();
+
+	request.onload = () => {
+		document.getElementById('output-field').innerHTML = request.responseText;
+		//elementUpdate("div#output-field");
+		console.log(request.responseText)
+	}
+
+	request.open('get', 'RecieveOutput');
+	request.send();
+}
+
 function ShowRequestRange()
 {
 	requestList = document.getElementById('request-list').children;
@@ -102,4 +115,4 @@ document.addEventListener('keydown', (event) => {
 	preventDefault();
 })
 
-document.getElementById('form').value = "";
+setInterval(GetOutput, 250);
